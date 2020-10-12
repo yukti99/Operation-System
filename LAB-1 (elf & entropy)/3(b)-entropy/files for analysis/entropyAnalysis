@@ -1,0 +1,11 @@
+My entropy analysis conclusion of different category files
+
+	1. text file entropy =  3.9749 - 4.1636
+	2. odt file entropy =  7.5231
+	3. pdf file entropy = 7.3005
+	4. AES encrypted file = 5.71875-6.027
+	5. DES encrypted file = 5.59307-6.1639
+	6. Zip file = 5.9097-6.8990
+	7. rar file =  7.1251-7.5866
+	
+

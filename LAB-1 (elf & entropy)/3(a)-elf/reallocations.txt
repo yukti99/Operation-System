@@ -1,0 +1,14 @@
+.rela.dyn 0x200d98
+ 0x200da0
+ 0x201008
+_ITM_deregisterTMCloneTable 0x200fd8
+__libc_start_main 0x200fe0
+__gmon_start__ 0x200fe8
+_ITM_registerTMCloneTable 0x200ff0
+__cxa_finalize 0x200ff8
+stdin 0x201010
+.rela.pltputs 0x200fb0
+printf 0x200fb8
+fgets 0x200fc0
+strcmp 0x200fc8
+malloc 0x200fd0
