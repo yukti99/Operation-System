@@ -4,7 +4,7 @@
 // compile using:
 // g++ filename.cpp -lpthread 
 
-
+// both producers working fine
 #include <bits/stdc++.h>
 #include <semaphore.h>
 #include <random>
@@ -12,7 +12,7 @@
 #include <pthread.h>
 using namespace std;
 
-#define buffer_size 15
+#define buffer_size 6
 #define prod_no 2
 #define cons_no 2
 
@@ -46,7 +46,7 @@ void *Producer1(void *no){
 		sem_wait(&mutex1); // lock the cs
 			// critical section
 			cout<<"p2_wait = "<<p2_wait<<endl;
-			if (p2_wait){
+			if (p2_wait==true){
 				// if producer-2 has pending task then producer-1 will relinquish the cs
 				cout<<"Producer-1 has to wait for producer2..."<<endl;
 				sem_post(&mutex1);		
@@ -80,7 +80,7 @@ void *Producer2(void *no){
 	while(1){
 		sem_wait(&empty); // waiting on empty buffer 
 		sem_wait(&mutex1); // lock the cs
-		if (p2_wait){
+		if (p2_wait == true){
 					
 					if (buf[idp]==-1){
 					        cout<<"Producer-2 will now complete its pending job..."<<endl<<endl;
@@ -150,7 +150,7 @@ void *Producer2(void *no){
 				
 				
 				
-			}
+			}else{    sem_post(&mutex1);}  
 		}	
 		
 	
@@ -167,7 +167,7 @@ void *Consumer1(void *no){
 		sem_wait(&mutex1); // lock the cs
 			// critical section
 			cout<<"c2_wait = "<<c2_wait<<endl;
-			if (c2_wait){
+			if (c2_wait==true){
 				// if consumer-2 has pending task then consumer-1 will relinquish the cs
 				cout<<"Consumer-1 has to wait for Consumer-2..."<<endl;
 				sem_post(&mutex1);							
@@ -198,7 +198,7 @@ void *Consumer2(void *no){
 	while(1){
 		sem_wait(&full); // waiting on full buffer
 		sem_wait(&mutex1); // lock the cs
-		if (c2_wait){
+		if (c2_wait == true){
 					
 					if (buf[idc]!=-1){
 					        cout<<"Consumer-2 will now complete its pending job..."<<endl<<endl;
@@ -235,17 +235,18 @@ void *Consumer2(void *no){
 			
 					int item1 = buf[idc];
 					buf[idc] = -1;
-					cout<<"\nConsumer - 2 consumed :  "<<item1<<" at position = "<<idc<<endl<<endl;
+					cout<<"\nConsumer - 2 consumer :  "<<item1<<" at position = "<<idc<<endl<<endl;
 					idc = (idc+1)%buffer_size;
 					display_buffer();
-					cout<<"idc now = "<<idc<<endl;	
+					cout<<"idc now = "<<idp<<endl;	
 						
 				
 								
 					if (buf[idc] != -1){
 						
 						
-						int item2 = buf[idc];								
+						int item2 = buf[idc];	
+						buf[idc]  = -1;							
 						cout<<"\nConsumer - 2 consumed item2 :  "<<item2<<" at position = "<<idp<<endl<<endl;
 						idc = (idc+1)%buffer_size;
 						display_buffer();
@@ -266,7 +267,7 @@ void *Consumer2(void *no){
 				
 				
 				
-			}
+			}else{    sem_post(&mutex1);} 
 		}	
 		
 	
@@ -292,9 +293,6 @@ int main(){
 	sem_init(&empty,0, buffer_size);
 	sem_init(&full,0,0);
 	sem_init(&mutex1,0, 1); // lock on critical section
-	// to signal producer 2
-	//sem_init(&wakeprod2, 0,1);
-	//sem_init(&sleepprod1, 0,1);
 	
 	for(int i=0;i<buffer_size;i++){
 		buf[i] = -1;
